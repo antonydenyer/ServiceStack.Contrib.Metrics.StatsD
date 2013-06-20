@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>ServiceStack.Contrib.Metrics.StatsD</id>
+    <version>1.0.0</version>
+    <authors>Antony Denyer</authors>
+    <owners>Antony Denyer</owners>
+    <licenseUrl>https://github.com/antonydenyer/ServiceStack.Contrib.Metrics.StatsD</licenseUrl>
+    <projectUrl>https://github.com/antonydenyer/ServiceStack.Contrib.Metrics.StatsD</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Add response times to StatsD from service stack</description>
+    <releaseNotes>Initial release.</releaseNotes>
+    <copyright>Copyright 2013</copyright>
+    <tags>stats StatsD ServiceStack</tags>
+    <dependencies>
+      <dependency id="StatsdClient" version="1.0.0.12" />
+      <dependency id="ServiceStack" version="3.9.54" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Debug\ServiceStack.Contrib.Measurements.StatsD.dll" target="lib\net45" />
+  </files>
+</package>
