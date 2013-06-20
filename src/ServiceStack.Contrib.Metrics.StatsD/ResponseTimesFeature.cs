@@ -1,4 +1,5 @@
 ﻿using System;
+using ServiceStack.ServiceHost;
 using ServiceStack.WebHost.Endpoints;
 using StatsdClient;
 
@@ -15,15 +16,34 @@ namespace ServiceStack.Contrib.Metrics.StatsD
 
         public void Register(IAppHost appHost)
         {
-            appHost.PreRequestFilters.Insert(0, (request, response) => request.Headers.Add("ResponseTime", DateTime.UtcNow.ToString("o")));
+            appHost.PreRequestFilters.Add((request, response) => PreRequestFilter(request));
+            appHost.ResponseFilters.Add((request, response, item) => ResponseFilter(request,response));
+        }
 
-            appHost.ResponseFilters.Add((request, response, item) =>
-            {
-                var started = DateTime.Parse(request.Headers["ResponseTime"]);
-                var responseTime = started.Subtract(DateTime.UtcNow);
+        private void ResponseFilter(IHttpRequest request, IHttpResponse response)
+        {
+            var started = DateTime.Parse(request.Headers["ResponseTime"]);
+            var responseTime = started.Subtract(DateTime.UtcNow);
 
-                _statsD.Send<StatsdClient.Statsd.Timing>(string.Format(".{0}.{1}", request.HttpMethod,request.OperationName), responseTime.Milliseconds);
-            });
+            _statsD.Send<Statsd.Timing>(BuildIdentifier(request), responseTime.Milliseconds);
+        }
+
+
+        private void PreRequestFilter(IHttpRequest request)
+        {
+            request.Headers.Add("ResponseTime", DateTime.UtcNow.ToString("o"));
+            _statsD.Send<Statsd.Counting>(string.Format("{0}.handles", BuildIdentifier(request)), 1);
+            _statsD.Send<Statsd.Counting>(string.Format("{0}.requestLengthKb", BuildIdentifier(request)), ContentLengthInKb(request.ContentLength));
+        }
+
+        private static int ContentLengthInKb(long contentLength)
+        {
+            return (int)Math.Round((decimal)contentLength / 1000);
+        }
+
+        private static string BuildIdentifier(IHttpRequest request)
+        {
+            return string.Format(".{0}.{1}", request.HttpMethod, request.OperationName);
         }
     }
 }

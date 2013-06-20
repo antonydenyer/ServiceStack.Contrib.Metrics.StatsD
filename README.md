@@ -10,6 +10,8 @@ Installation
 You can [get the ServiceStack Measurements package on nuget](http://nuget.org/packages/ServiceStack.Contrib.Measurement.StatsD)
 Or you can get the source from here on Github and build it.
 
+To get requsts per second in graphite use scaleToSeconds(derivative(stats.[prefix].GET.*.servicestack.handles),1)
+
 Usage
 ------
 ```csharp
