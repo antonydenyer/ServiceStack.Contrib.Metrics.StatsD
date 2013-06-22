@@ -1,0 +1,1 @@
+.nuget\nuget.exe pack .\ServiceStack.Contrib.Metrics.StatsD\ServiceStack.Contrib.Metrics.StatsD.nuspec
