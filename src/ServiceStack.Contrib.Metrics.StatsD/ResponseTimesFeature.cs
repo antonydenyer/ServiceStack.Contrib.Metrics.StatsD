@@ -32,8 +32,8 @@ namespace ServiceStack.Contrib.Metrics.StatsD
         private void PreRequestFilter(IHttpRequest request)
         {
             request.Headers.Add("ResponseTime", DateTime.UtcNow.ToString("o"));
-            _statsD.Send<Statsd.Counting>(string.Format("{0}.handles", BuildIdentifier(request)), 1);
-            _statsD.Send<Statsd.Counting>(string.Format("{0}.requestLengthKb", BuildIdentifier(request)), ContentLengthInKb(request.ContentLength));
+            _statsD.Send<Statsd.Gauge>(string.Format("{0}.handles", BuildIdentifier(request)), 1);
+            _statsD.Send<Statsd.Gauge>(string.Format("{0}.requestLengthKb", BuildIdentifier(request)), ContentLengthInKb(request.ContentLength));
         }
 
         private static int ContentLengthInKb(long contentLength)
